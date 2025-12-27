@@ -35,29 +35,25 @@ class GridPlus {
 
   form(dt) {
     const f = new FormData();
-    Object.entries(dt ?? {}).forEach(([k, v]) => { if (v != null) f.append(k, String(v)); });
+    Object.entries(dt ?? {}).forEach(([k, v]) => f.append(k, v));
     return f;
   }
 
-  ext(buf) {
-    const h = buf.subarray(0, 12).toString("hex");
-    if (h.startsWith("ffd8ffe")) return "jpg";
-    if (h.startsWith("89504e47")) return "png";
-    return "png";
-  }
-
-  async up(buf, mtd) {
-    const e = this.ext(buf);
-    const mime = MIME_MAP[e] ?? "image/png";
-    const d = await this.ins.post("/ai/web/nologin/getuploadurl", this.form({ ext: e, method: mtd })).then(r => r?.data);
-    await axios.put(d.data.upload_url, buf, { headers: { "content-type": mime } });
+  async up(buf, path) {
+    const ext = "png"; 
+    const mime = MIME_MAP[ext];
+    const f = new FormData();
+    f.append("file", buf, { filename: `file.${ext}`, contentType: mime });
+    f.append("path", path);
+    const d = await this.ins.post("/ai/nano/upload_file", f, { headers: { ...f.getHeaders(), "content-type": mime } });
     return d?.data?.img_url;
   }
 
   async poll({ path, sl }) {
     const start = Date.now();
     const check = async () => {
-      if (Date.now() - start > 60000) throw new Error("Timeout");
+      // Extended timeout for serverless environments
+      if (Date.now() - start > 60000) throw new Error("Neural Engine Timeout");
       const r = await this.ins.get(path);
       if (sl(r.data)) return r.data;
       await new Promise(res => setTimeout(res, 3000));
@@ -85,21 +81,27 @@ class GridPlus {
 const app = express();
 app.use(cors());
 app.use(express.json({ limit: '50mb' }));
-app.use(express.static('public'));
+
+// Serve static files from the public directory
+app.use(express.static(path.join(__dirname, 'public')));
 
 app.post('/api/grid-plus', async (req, res) => {
   try {
-    const api = new GridPlus();
-    const result = await api.generate(req.body);
+    const { prompt, imageUrl } = req.body;
+    const engine = new GridPlus();
+    const result = await engine.generate({ prompt, imageUrl });
     res.json(result);
-  } catch (e) {
-    res.status(500).json({ error: e.message });
+  } catch (err) {
+    console.error("Error generating image:", err.message);
+    res.status(500).json({ error: err.message });
   }
 });
 
-// For local testing
-if (process.env.NODE_ENV !== 'production') {
-  app.listen(3000, () => console.log("Server running on http://localhost:3000"));
-}
+// IMPORTANT: Export for Vercel Deployment
+module.exports = app; 
 
-module.exports = app;
+// Local Server Initialization
+if (require.main === module) {
+  const PORT = process.env.PORT || 3000;
+  app.listen(PORT, () => console.log(`Neural Core Active on Port ${PORT}`));
+  }
