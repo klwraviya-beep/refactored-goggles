@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DTZ IMAGE AI | Advanced Neural Hub</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --neon-cyan: #00f2ff;
+            --neon-magenta: #ff00c1;
+            --neon-violet: #bc13fe;
+            --dark-core: #020408;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { 
+            background: var(--dark-core); 
+            color: white; 
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            overflow-x: hidden;
+        }
+
+        /* --- ADVANCED LANDING PAGE --- */
+        #landingPage {
+            position: fixed;
+            inset: 0;
+            z-index: 1000;
+            background: radial-gradient(circle at center, #0a1128 0%, #020408 100%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            transition: transform 1s cubic-bezier(0.87, 0, 0.13, 1);
+        }
+
+        .hero-glitch {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 3.5rem;
+            font-weight: 900;
+            text-transform: uppercase;
+            position: relative;
+            background: linear-gradient(to bottom, #fff 30%, var(--neon-cyan));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            filter: drop-shadow(0 0 15px rgba(0, 242, 255, 0.4));
+        }
+
+        .enter-btn {
+            margin-top: 40px;
+            padding: 15px 40px;
+            border: 1px solid var(--neon-cyan);
+            border-radius: 50px;
+            font-family: 'Orbitron', sans-serif;
+            letter-spacing: 5px;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            transition: 0.3s;
+        }
+
+        .enter-btn:hover {
+            background: var(--neon-cyan);
+            color: black;
+            box-shadow: 0 0 30px var(--neon-cyan);
+        }
+
+        /* --- MAIN APP UI --- */
+        .app-shell {
+            max-width: 500px;
+            margin: 0 auto;
+            min-height: 100vh;
+            background: rgba(2, 4, 8, 0.95);
+            border-inline: 1px solid rgba(255, 255, 255, 0.05);
+            position: relative;
+        }
+
+        .cyber-header {
+            padding: 30px 20px;
+            background: linear-gradient(to bottom, rgba(0, 242, 255, 0.05), transparent);
+            border-bottom: 1px solid rgba(0, 242, 255, 0.1);
+        }
+
+        .nav-tabs {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            padding: 20px;
+        }
+
+        .tab-btn {
+            padding: 12px;
+            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            text-align: center;
+            font-size: 13px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: 0.3s;
+            color: #888;
+        }
+
+        .tab-btn.active {
+            background: rgba(0, 242, 255, 0.1);
+            border-color: var(--neon-cyan);
+            color: var(--neon-cyan);
+            box-shadow: inset 0 0 10px rgba(0, 242, 255, 0.2);
+        }
+
+        /* --- ANIME ENGINE PANEL --- */
+        .anime-panel {
+            background: linear-gradient(135deg, rgba(188, 19, 254, 0.1), rgba(255, 0, 193, 0.05));
+            border: 1px solid rgba(188, 19, 254, 0.3);
+            border-radius: 20px;
+            margin: 0 20px 20px;
+            padding: 20px;
+        }
+
+        .anime-tag {
+            background: var(--neon-magenta);
+            color: white;
+            padding: 4px 12px;
+            border-radius: 5px;
+            font-size: 10px;
+            font-weight: 900;
+            text-transform: uppercase;
+        }
+
+        .glass-input {
+            width: 100%;
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 15px;
+            color: white;
+            outline: none;
+            transition: 0.3s;
+        }
+
+        .glass-input:focus {
+            border-color: var(--neon-magenta);
+            box-shadow: 0 0 15px rgba(255, 0, 193, 0.2);
+        }
+
+        .gen-button {
+            width: 100%;
+            padding: 18px;
+            margin-top: 15px;
+            border-radius: 15px;
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 700;
+            background: linear-gradient(45deg, var(--neon-violet), var(--neon-magenta));
+            border: none;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .gen-button:disabled { opacity: 0.5; cursor: not-allowed; }
+
+        /* --- SCANLINE EFFECT --- */
+        .scanline {
+            width: 100%;
+            height: 100px;
+            z-index: 10;
+            background: linear-gradient(0deg, rgba(0, 0, 0, 0) 0%, rgba(0, 242, 255, 0.1) 50%, rgba(0, 0, 0, 0) 100%);
+            opacity: 0.1;
+            position: absolute;
+            bottom: 100%;
+            animation: scan 4s linear infinite;
+        }
+
+        @keyframes scan {
+            0% { bottom: 100%; }
+            100% { bottom: -100px; }
+        }
+
+        .result-frame {
+            position: relative;
+            min-height: 300px;
+            background: #000;
+            border-radius: 20px;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+    </style>
+</head>
+<body>
+
+    <div id="landingPage">
+        <div class="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-20"></div>
+        <h1 class="hero-glitch">DTZ AI</h1>
+        <p class="text-gray-500 font-mono text-xs tracking-[10px] uppercase mt-2">Next Gen Image Synthesis</p>
+        <button class="enter-btn" onclick="enterApp()">INITIALIZE</button>
+    </div>
+
+    <div class="app-shell">
+        <header class="cyber-header text-center">
+            <h2 class="text-xl font-black tracking-widest text-cyan-400 font-['Orbitron']">DTZ IMAGE AI</h2>
+            <div class="flex justify-center gap-4 mt-2">
+                <span class="text-[9px] text-gray-500"><i class="fas fa-circle text-green-500 text-[6px] mr-1"></i> NEURAL ENGINE ONLINE</span>
+            </div>
+        </header>
+
+        <nav class="nav-tabs">
+            <div class="tab-btn active" id="tab-anime" onclick="switchMode('anime')">ANIME GEN</div>
+            <div class="tab-btn" id="tab-edit" onclick="switchMode('edit')">NEURAL EDIT</div>
+        </nav>
+
+        <main class="px-5">
+            <div id="animePanel" class="anime-panel">
+                <div class="flex justify-between items-center mb-4">
+                    <span class="anime-tag">Advanced Engine</span>
+                    <i class="fas fa-bolt text-magenta-500"></i>
+                </div>
+                <label class="text-[10px] text-gray-400 uppercase tracking-widest block mb-2">Visual Script</label>
+                <textarea id="animePrompt" class="glass-input h-32" placeholder="e.g. futuristic samurai girl in neo-tokyo, 8k, masterpiece, cinematic lighting..."></textarea>
+                
+                <button id="genBtn" class="gen-button" onclick="generateAnime()">
+                    GENERATE ANIME
+                </button>
+            </div>
+
+            <div id="editPanel" class="hidden anime-panel" style="border-color: var(--neon-cyan);">
+                <span class="text-[10px] text-cyan-400 uppercase font-bold mb-4 block">Source Augmentation</span>
+                <div class="border-2 border-dashed border-cyan-500/30 rounded-xl p-8 text-center cursor-pointer mb-4" onclick="document.getElementById('fileInput').click()">
+                    <i class="fas fa-upload text-cyan-500 mb-2"></i>
+                    <p class="text-xs" id="uploadStatus">Upload Master Image</p>
+                    <input type="file" id="fileInput" class="hidden" accept="image/*">
+                </div>
+                <textarea id="editPrompt" class="glass-input h-24" placeholder="Modify image..."></textarea>
+                <button class="gen-button" style="background: var(--neon-cyan); color:black" onclick="generateAnime()">APPLY EDITS</button>
+            </div>
+
+            <div class="mb-20 px-2">
+                <div class="result-frame">
+                    <div class="scanline"></div>
+                    <div id="resultPlaceholder" class="text-center opacity-20">
+                        <i class="fas fa-robot text-4xl mb-4"></i>
+                        <p class="text-[10px] font-mono uppercase">System Idle: Awaiting Input</p>
+                    </div>
+                    <img id="resultImage" class="hidden w-full h-full object-cover">
+                    
+                    <div id="loader" class="hidden flex flex-col items-center">
+                        <div class="w-10 h-10 border-2 border-magenta-500 border-t-transparent rounded-full animate-spin"></div>
+                        <p class="text-[8px] font-mono mt-4 text-magenta-500">SYNTHESIZING PIXELS...</p>
+                    </div>
+                </div>
+
+                <div id="actionRow" class="hidden grid grid-cols-2 gap-4 mt-4">
+                    <button class="bg-white/5 py-4 rounded-xl border border-white/10 text-[10px] font-bold" onclick="downloadImage()">DOWNLOAD</button>
+                    <button class="bg-white/5 py-4 rounded-xl border border-white/10 text-[10px] font-bold" onclick="location.reload()">NEW SESSION</button>
+                </div>
+            </div>
+        </main>
+
+        <footer class="absolute bottom-5 w-full text-center">
+            <p class="text-[9px] text-gray-600 font-mono tracking-widest">DTZ NEURAL CORE V3.0 • ENCRYPTED CONNECTION</p>
+        </footer>
+    </div>
+
+    <script>
+        // Landing Page Logic
+        function enterApp() {
+            document.getElementById('landingPage').style.transform = 'translateY(-100%)';
+        }
+
+        // Mode Switching
+        function switchMode(mode) {
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            document.getElementById('tab-' + mode).classList.add('active');
+            
+            if(mode === 'anime') {
+                document.getElementById('animePanel').classList.remove('hidden');
+                document.getElementById('editPanel').classList.add('hidden');
+            } else {
+                document.getElementById('animePanel').classList.add('hidden');
+                document.getElementById('editPanel').classList.remove('hidden');
+            }
+        }
+
+        let selectedImageBase64 = null;
+
+        // Handle File Uploads
+        document.getElementById('fileInput').onchange = function(e) {
+            const reader = new FileReader();
+            const status = document.getElementById('uploadStatus');
+            reader.onload = function() {
+                selectedImageBase64 = reader.result;
+                status.innerText = "Image Buffered: Ready for Augmentation";
+                status.classList.add('text-cyan-400');
+            };
+            reader.readAsDataURL(e.target.files[0]);
+        };
+
+        // Advanced AI Generation logic
+        async function generateAnime() {
+            const promptInput = document.getElementById('animePrompt').value || document.getElementById('editPrompt').value;
+            if(!promptInput) return alert("System requires visual script (prompt)");
+
+            const genBtn = document.getElementById('genBtn');
+            const loader = document.getElementById('loader');
+            const placeholder = document.getElementById('resultPlaceholder');
+            const img = document.getElementById('resultImage');
+            const actions = document.getElementById('actionRow');
+
+            // Set UI to Loading State
+            genBtn.disabled = true;
+            loader.classList.remove('hidden');
+            placeholder.classList.add('hidden');
+            img.classList.add('hidden');
+            actions.classList.add('hidden');
+
+            try {
+                const response = await fetch('/api/grid-plus', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        // Automatically inject high-quality anime tags
+                        prompt: `anime style, masterpiece, high quality, highly detailed, ${promptInput}`,
+                        imageUrl: selectedImageBase64 // Correctly sends uploaded image if present
+                    })
+                });
+
+                const data = await response.json();
+
+                if(data.image_url) {
+                    img.src = data.image_url;
+                    img.classList.remove('hidden');
+                    actions.classList.remove('hidden');
+                } else {
+                    alert("Neural engine error: " + (data.error || "Unknown Error"));
+                }
+            } catch (e) {
+                alert("Core failure: Check connection");
+            } finally {
+                loader.classList.add('hidden');
+                genBtn.disabled = false;
+            }
+        }
+
+        function downloadImage() {
+            const link = document.createElement('a');
+            link.href = document.getElementById('resultImage').src;
+            link.download = `DTZ-ANIME-${Date.now()}.png`;
+            link.click();
+        }
+    </script>
+</body>
+  </html>
